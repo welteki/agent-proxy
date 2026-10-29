@@ -1,0 +1,31 @@
+# agent-proxy config: copy to ~/.config/agent-proxy/config.yaml.
+
+# Base URL intercepted requests are sent to. Required.
+gateway: https://agentgateway.example.com
+
+# Header that carries the client's key (its proxy auth password) to the
+# gateway. Default: x-agentgateway-key.
+# keyHeader: x-agentgateway-key
+
+# Header that carries the host a request was sent to, for the gateway to
+# route on. Default: x-agent-proxy-host.
+# hostHeader: x-agent-proxy-host
+
+# CONNECTs to these hosts are intercepted. Requests for the listed paths
+# (matched exactly) go to the gateway at the mapped path; all other requests
+# go to the origin unchanged.
+routes:
+  # Claude Code. /v1/messages/count_tokens stays with the origin.
+  - host: api.anthropic.com
+    paths:
+      /v1/messages: /v1/messages
+
+  # Codex and opencode signed in with ChatGPT.
+  - host: chatgpt.com
+    paths:
+      /backend-api/codex/responses: /v1/responses
+
+  # pi signed in with ChatGPT.
+  - host: api.openai.com
+    paths:
+      /v1/responses: /v1/responses
